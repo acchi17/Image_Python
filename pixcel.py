@@ -28,23 +28,31 @@ cvimg_bgr = cv2.imread(args[1], 1)
    #if keycode == 27:
        #break
 
-#pip
-from PIL import ImageTk
 #cv2.destroyAllWindows()
 
 #Define callback function
 def mscallback(event):
     line = 'x:' + str(event.x) + ' ' + 'y:' + str(event.y)
-    ent.delete(0, 20)
-    ent.insert(0, line)
+    entglid.delete(0, 20)
+    entglid.insert(0, line)
+
+    #!!!!!cvimg_bgr.shape:Guard value get!!!
+    if not((cvimg_bgr.shape[0] <= event.y) or (cvimg_bgr.shape[1] <= event.x)):
+        pxlval = cvimg_bgr[event.y, event.x]
+        entbgr.delete(0, 100)
+        entbgr.insert(0, str(pxlval) + str(cvimg_bgr.shape))
+        #entbgr.insert(0, str(cvimg_bgr.shape))
 
 
 root = mytk.Tk() #Create & show a window
 root.title(args[1])
 root.geometry("450x450")
 
-ent = mytk.Entry(width=12)
-ent.place(x=0, y=0)
+entglid = mytk.Entry(width=12)
+entglid.place(x=0, y=0)
+entbgr = mytk.Entry(width=25)
+entbgr.place(x=0, y=20)
+
 #ent.pack()
 
 cvimg_rgb = cv2.cvtColor(cvimg_bgr, cv2.COLOR_BGR2RGB) #Convert BGR to RGB
@@ -59,8 +67,7 @@ cvs = mytk.Canvas(root, width = 450, height = 450)
 #Create image on the canvas
 cvs.create_image(0, 0, image = image_tk, anchor=mytk.NW)
 #Place image on the canvas
-cvs.place(x=0, y=20)
-#cvs.pack()
+cvs.place(x=0, y=40)
 
 cvs.bind('<Motion>', mscallback)
 
